@@ -1,0 +1,425 @@
+{
+  "info": {
+    "_postman_id": "7cafc71f-2053-4921-b77c-bbf5136a46ec",
+    "name": "E-commerce API Testing Project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47333895",
+    "_collection_link": "https://go.postman.co/collection/47333895-7cafc71f-2053-4921-b77c-bbf5136a46ec?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get All Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Products is an array\", function () {\r\n    pm.expect(data.products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Products are not empty\", function () {\r\n    pm.expect(data.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Total property exists\", function () {\r\n    pm.expect(data).to.have.property(\"total\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Single Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Product ID should be 1\", function () {\r\n    pm.expect(data.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Product title should not be empty\", function () {\r\n    pm.expect(data.title).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Product price should be a number\", function () {\r\n    pm.expect(data.price).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Product category should exist\", function () {\r\n    pm.expect(data.category).to.be.a(\"string\").and.not.empty;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Invalid Product ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response is JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Error message should exist\", function () {\r\n    pm.expect(data).to.have.property(\"message\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/99999",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "99999"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search Products",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Products should be an array\", function () {\r\n    pm.expect(data.products).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"Search results should not be empty\", function () {\r\n    pm.expect(data.products.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Total should be a number\", function () {\r\n    pm.expect(data.total).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Products should contain phone keyword\", function () {\r\n    const matchingProducts = data.products.filter(product =>\r\n        (product.title + \" \" + product.description)\r\n            .toLowerCase()\r\n            .includes(\"phone\")\r\n    );\r\n\r\n    pm.expect(matchingProducts.length).to.be.above(0);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/search?q=phone",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "phone"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Products Pagination",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Limit should be 5\", function () {\r\n    pm.expect(data.limit).to.eql(5);\r\n});\r\n\r\npm.test(\"Skip should be 0\", function () {\r\n    pm.expect(data.skip).to.eql(0);\r\n});\r\n\r\npm.test(\"Products count should be 5\", function () {\r\n    pm.expect(data.products.length).to.eql(5);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products?limit=5&skip=0",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": "5"
+            },
+            {
+              "key": "skip",
+              "value": "0"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Add New Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Product ID should exist\", function () {\r\n    pm.expect(data.id).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"Product title should be correct\", function () {\r\n    pm.expect(data.title).to.eql(\"QA Testing Laptop\");\r\n});\r\n\r\npm.test(\"Product price should be correct\", function () {\r\n    pm.expect(data.price).to.eql(1500);\r\n});\r\n\r\npm.test(\"Product category should be correct\", function () {\r\n    pm.expect(data.category).to.eql(\"laptops\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"QA Testing Laptop\",\r\n    \"price\": 1500,\r\n    \"description\": \"Laptop added for API testing\",\r\n    \"category\": \"laptops\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dummyjson.com/products/add",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Response is valid JSON\", function () {\n    pm.response.to.be.json;\n});\n\nconst data = pm.response.json();\n\npm.test(\"Product ID should be 1\", function () {\n    pm.expect(data.id).to.eql(1);\n});\n\npm.test(\"Product title should be 'Essence Mascara Lash Princess'\", function () {\n    pm.expect(data.title).to.eql(\"Essence Mascara Lash Princess\");\n});\n\npm.test(\"Product price should be 9.99\", function () {\n    pm.expect(data.price).to.eql(9.99);\n});\n\npm.test(\"Product category should be 'beauty'\", function () {\n    pm.expect(data.category).to.eql(\"beauty\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Product",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response is valid JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"Product ID should be 1\", function () {\r\n    pm.expect(data.id).to.eql(1);\r\n});\r\n\r\npm.test(\"Product should be marked as deleted\", function () {\r\n    pm.expect(data.isDeleted).to.eql(true);\r\n});\r\n\r\npm.test(\"Deleted date should exist\", function () {\r\n    pm.expect(data).to.have.property(\"deletedOn\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/1",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid Product ID (Negative)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Invalid Product Data",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "{\r\n    \"title\": 12345,\r\n    \"price\": \"invalid-price\",\r\n    \"description\": \"\",\r\n    \"category\": \"laptops\"\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/add",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Missing Required Fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "{\r\n    \"description\": \"Product without title and price\",\r\n    \"category\": \"laptops\"\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "https://dummyjson.com/products/add",
+          "protocol": "https",
+          "host": [
+            "dummyjson",
+            "com"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Empty Search",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": ""
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Dynamic Product Creation",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.test(\"Response is JSON\", function () {\n    pm.response.to.be.json;\n});\n\npm.test(\"Product title is correct\", function () {\n    const data = pm.response.json();\n    pm.expect(data.title).to.eql(\"QA Laptop\");\n});\n\npm.test(\"Product price is correct\", function () {\n    const data = pm.response.json();\n    pm.expect(data.price).to.eql(2500);\n});\n\npm.test(\"Product category is correct\", function () {\n    const data = pm.response.json();\n    pm.expect(data.category).to.eql(\"laptops\");\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"{{productTitle}}\",\r\n    \"price\": {{productPrice}},\r\n    \"description\": \"Created using Postman environment variables\",\r\n    \"category\": \"{{productCategory}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/products/add",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "products",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "pm.test(\"Response time is less than 3000ms\", function () {\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+          "});\r",
+          "\r",
+          "pm.test(\"Response has valid JSON\", function () {\r",
+          "    pm.response.to.be.json;\r",
+          "});\r",
+          "\r",
+          "pm.test(\"Response has Content-Type header\", function () {\r",
+          "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
